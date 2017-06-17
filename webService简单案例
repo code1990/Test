@@ -1,0 +1,89 @@
+## webService开发案例
+
+Web Service = SOAP + HTTP + WSDL
+
+SOAP 指简单对象访问协议，它是一种基于XML的消息通讯格式，用于网络上，不同平台，不同语言的应用程序间的通讯。
+
+WSDL 是一个XML文档，它通过HTTP向公众发布，公告客户端程序关于某个具体的 Web service服务的URL信息、方法的命名，参数，返回值等。
+
+
+
+## 服务端代码
+
+
+
+``` 
+import javax.jws.WebService;
+import javax.xml.ws.Endpoint;
+@WebService
+public class ServiceHello {
+    /**
+     * 供客户端调用的方法
+	 * @param name				传入参数
+	 * @return String			返回结果
+	 */
+	public String getValue(String name){
+		return "我叫："+name;
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Endpoint.publish("http://localhost:9001/Service/ServiceHello", new ServiceHello());
+		System.out.println("service success!");
+	}
+}
+
+
+```
+
+####编译以后 测试结果
+
+、测试结果
+
+测试地址：http://localhost:9001/Service/ServiceHello?wsdl
+
+## 客户端代码
+
+1.创建项目
+
+2.cmd执行如下命令
+2、命令提示窗口执行生成命令。
+
+格式：wsimport -s "src目录" -p “生成类所在包名” -keep “wsdl发布地址”
+
+示例：
+
+wsimport -s G:\\workspace\\webService\\TheClient\\src -p com.hyan.client -keep http://localhost:9001/Service/ServiceHello?wsdl
+
+说明：
+
+1）"src目录"地址不可含空格
+
+2）“wsdl发布地址”不要漏了“?wsdl”
+
+
+### 刷新目录 生成对应的包和类
+
+### 添加main方法测试
+
+``` 
+import com.hyan.client.ServiceHello;
+import com.hyan.client.ServiceHelloService;
+
+public class ServiceTest {
+
+    /**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		ServiceHello hello = new ServiceHelloService().getServiceHelloPort();    
+        String name = hello.getValue("Hyan");
+        System.out.println(name);
+	}
+}
+
+```
+
+
