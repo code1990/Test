@@ -1,0 +1,160 @@
+# 记录每天开发当中的卡壳的问题 让自己不断成长起来
+
+# 6.12-18
+ 
+# 1.  需要准备参加计算机等级考试的事情
+
+ 
+###################################6,12######################
+1.如何选择input下面的td以及tr ("tbody").find("tr:eq(1)").find("td:lt(2)") 查询第2行的第2个td 或者td:last td:first
+
+2.如何设置颜色 加粗 css.('color;,'red'); css.('font-weight','bold');
+
+3，如何去掉特殊属性 readonly document.getElementById("id").removeAttribute("readonly");
+
+4.td包含input直接设置value 设置text()即可
+
+5.引用js事件无效 把js事件放在$(function(){});里面包括起来
+$("selector").on("change",function(){});该方式绑定函数 需要在放在页面执行完成以后的方法当中 $(function(){});
+
+6.注意Struts的action请求URL的写法 等待补充起来
+
+####################################6.13##################
+注意一下事情 
+获取多个dom节点 查找具体的节点eq(0),eq(n)找到具体的dom节点
+
+将input设置type=button的时候 可能会干扰到旁边的input的value>>>>>处理方式 改变为<button></button>类型 替代input
+
+将placeholder的背景颜色设置为半透明 具体的方式：opacity:0.5
+
+readonly属性 在IE浏览器当中是没有的  方式使用disable：true
+
+
+
+--------------------------------------------
+
+周五
+
+1.如何使用jdbcTemplate 返回一个Map 
+
+2.如何在input的值没有改变的时候 ，根据其属性变化 在改变之后根据该变化去查找我们需要的数据 一般而言是组织树
+具体分析而言就是模态框的改变事件
+$("#user_tree").("hidden.bs.modal",function(){});
+
+具体的知识点再次补齐
+1、show.bs.modal 在调用show方法后触发
+2.shown.bs.modal 在modal框对于用户可见时候触发
+3.hide.bs.modal  在调用hide方法后触发
+4.hidden.bs.modal 在调用modal框完全对于用户隐藏时候触发
+
+
+3.省级地市联动菜单 
+找不到很简单的  案例 周一补上
+
+4.设置带有模态框来替代alert
+//封装alert方法
+function alert(data,callback){
+	var title,mess,ico;
+	if(typeof(data)==='object'){
+		if(data.title==null || undefined==data.title){
+			title="系统提示";
+		}else{
+			title=data.title;
+		}
+		if(data.mess==null || undefined==data.mess){
+			mess="请确认您的操作！";
+		}else{
+			mess=data.mess;
+		}
+		if(data.ico==null || undefined==data.ico){
+			ico="warn";
+		}else{
+			ico=data.ico;
+		}
+	}else if(typeof(data)==='function'){
+		title="系统提示";
+		mess="alert参数设置错误！";
+		ico="warn";
+	}else{
+		title="系统提示";
+		mess=data;
+		ico="warn";
+	}
+	$("#alertPop").remove();
+	var alertmodal="<div id='alertPop' class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='false' data-backdrop='static'>";
+	alertmodal+="<div class='modal-backdrop fade in' style='height: "+$(window).height()+"px; display:none;'></div>";
+	alertmodal+="<div class='modal-dialog' style='width: 350px; margin: 0 auto; box-shadow:0 0 20px #555'><div class='modal-content' style='border-radius:5px;border:none;'><div class='modal-header' style='background:#f8f8f8; border-radius:5px 5px 0 0'>";
+	alertmodal+="<button type='button' class='close' data-dismiss='modal' aria-hidden='true' style='margin-top:2px'>×</button>";
+	alertmodal+="<h4 class='modal-title' id='myModalLabel' style='font-family:\"Microsoft YaHei\";color:#555'>"+title+"</h4>";
+	alertmodal+="</div><div class='modal-body' style='padding:20px 30px 30px'>";
+	switch(ico){
+	case "warn":alertmodal+="<span style='position:relative;top:10px;margin-right:5px;font-size:35px;color:#e30808' class='glyphicon glyphicon-exclamation-sign'></span>";break;
+	case "ask":alertmodal+="<span style='position:relative;top:10px;margin-right:5px;font-size:35px;color:#ff9900' class='glyphicon glyphicon-question-sign'></span>";break;
+	case "succeed":alertmodal+="<span style='position:relative;top:10px;margin-right:5px;font-size:35px;color:#0d9727' class='glyphicon glyphicon-ok-sign'></span>";break;
+	}
+	alertmodal+="<span style='font:normal 16px/32px \"Microsoft YaHei\"'>"+mess+"</span></div>";
+	alertmodal+="<div class='modal-footer' style='text-align:center'><button type='button' onclick='doOk();' class='btn btn-primary' style='padding:5px 20px; display:inline-block; background:#ff9900; border-color:#ff9900;font-family:\"Microsoft YaHei\";'>确定</button></div></div></div></div>";
+	$("body").after(alertmodal);
+	$("#alertPop").modal("show");
+	var dialogmgt=$(window).height()-$(".modal-dialog").height();
+	$("#alertPop .modal-dialog").css("marginTop",dialogmgt*0.5-50+"px");
+	document.body.onselectstart = function() {
+		return false;
+	};
+	this.doOk = function() {
+		$("#alertPop").modal("hide");
+		if (callback) {
+			callback();
+		}
+		document.body.onselectstart = function() {
+		};
+	}
+	$('#alertPop').on('hidden.bs.modal', function () {
+		$('#alertPop').remove();
+	})
+}
+
+/*alert(
+		{						//可以为object，也可以为string,为string时title、ico为默认值
+		title:"系统提示",  		//提示框标题，可为空默认值为"系统提示"
+		mess:"请确认您的操作！",		//提示的信息，可为空默认值为"请确认您的操作！"
+		ico:"warn"   			//提示图标，warn：红色感叹号，ask：橙色问号，succeed，绿色对号，可为空默认值为warn
+		},
+		callback 				//回调函数
+)*/
+</script>
+
+
+5.理解<c:forEach>表达式当中的参数与变量
+
+
+<c:forEach>标签的语法定义如下所示。
+
+                    <c:forEach var="name" items="expression" varStatus="name" 
+
+                             begin="expression" end="expression" step="expression">
+
+                             body content 
+
+                    </c:forEach>
+
+           <c:forEach>标签具有以下一些属性：
+
+l            var：迭代参数的名称。在迭代体中可以使用的变量的名称，用来表示每一个迭代变量。类型为String。
+
+l            items：要进行迭代的集合。对于它所支持的类型将在下面进行讲解。
+
+l            varStatus：迭代变量的名称，用来表示迭代的状态，可以访问到迭代自身的信息。
+
+l            begin：如果指定了items，那么迭代就从items[begin]开始进行迭代；如果没有指定items，那么就从begin开始迭代。它的类型为整数。
+
+l            end：如果指定了items，那么就在items[end]结束迭代；如果没有指定items，那么就在end结束迭代。它的类型也为整数。
+
+l            step：迭代的步长。
+
+
+6.了解webService的具体开发流程
+
+找个案例写个开发文档出来  贴在这里
+
+
