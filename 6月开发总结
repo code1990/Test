@@ -172,3 +172,14 @@ jsp页面使用Java代码注意的问题
 如果使用spring 来管理类 需要使用springLoader来获取实例
 
 如果不适用spring来管理者注入 使用new的方式来获取实例
+
+# 6.21
+处理jsp的编辑码问题 js 先编码再解码 js+jsp的轮换 
+
+下级部的递归遍历
+
+# 6.22
+jdbcTemplate的使用in来查询数据
+jdbcTemplate返回map
+遍历$.each
+
