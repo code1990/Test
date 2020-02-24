@@ -1,0 +1,1 @@
+--PostgreSQL ALTER TABLE 命令

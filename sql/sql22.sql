@@ -1,0 +1,1 @@
+--SQL FULL JOIN

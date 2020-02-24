@@ -1,0 +1,1 @@
+--MySQL ALTER命令

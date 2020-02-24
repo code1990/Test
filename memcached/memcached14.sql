@@ -1,0 +1,1 @@
+--Memcached incr/decr 命令

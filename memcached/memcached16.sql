@@ -1,0 +1,1 @@
+--Memcached stats items 命令

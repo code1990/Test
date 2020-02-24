@@ -1,0 +1,1 @@
+--Memcached flush_all 命令
